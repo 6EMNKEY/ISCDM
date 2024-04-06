@@ -14,6 +14,7 @@
 
     </head>
     <body>
+       
         <h2>Subir Video</h2>
 
         <form id="upload-form" action="ServletListado" method="post" enctype="multipart/form-data">
@@ -50,7 +51,17 @@
             <!-- Botón de envío del formulario -->
             <input type="submit" value="upload">
         </form>
-        
+         <%
+        String error = (String) request.getAttribute("error");
+        System.out.println(error);
+        if (error != null) {
+        %>
+            <div class="error-container">
+                <p><strong>Error:</strong> <%= error %></p>
+            </div>
+        <%
+            }
+        %>
         
         <script>
             function updateVideoInfo() {

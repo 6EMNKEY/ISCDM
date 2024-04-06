@@ -63,6 +63,7 @@ public class ServletListado extends HttpServlet {
     }
     
     
+    
     private void upload(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
             String name = request.getParameter("videoName");
@@ -104,7 +105,13 @@ public class ServletListado extends HttpServlet {
                 Files.copy(input, filePath, StandardCopyOption.REPLACE_EXISTING);
             }
             Video video = new Video(authorId, name, author, fechaSQL, sqlTime, description, format, urlinfo);
-            if(video.createVideo()){
+            if(video.existsVideo()){
+                System.out.println("Video ya existe");
+                request.setAttribute("error","Video repetido");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("subirVideo.jsp");
+                dispatcher.forward(request, response);
+            }
+            else if(video.createVideo()){
                 System.out.println("Video añadido con exito");
                 HttpSession session = request.getSession();
                 ArrayList videos = (ArrayList) session.getAttribute("userVideos");

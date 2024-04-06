@@ -52,7 +52,7 @@
                             <td><%= video.getReproducciones() %></td>
                             <td><%= video.getDescripcion() %></td>
                             <td>
-                                <button onclick="streamVideo('<%= video.getId() %>')"><%= video.getStreamB()%></button>
+                                <button onclick="streamVideo('<%= video.getId() %>' )"><%= video.getStreamB(video.getId())%></button>
                             </td>
                         </tr>
                 <%
@@ -74,7 +74,7 @@
         function streamVideo(videoId) {
             var xhr = new XMLHttpRequest();
             var videoId2 = ""+videoId;
-            var url = 'UserServlet?param1=' + encodeURIComponent("streamch") + "&param2=" +encodeURIComponent(videoId2) ;
+            var url = 'UserServlet?param1=' + encodeURIComponent("streamch") + "&param2=" +encodeURIComponent(videoId2);
             console.log(url);
             xhr.open("GET",url, true);
             xhr.send();

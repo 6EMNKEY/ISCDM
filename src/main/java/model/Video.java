@@ -196,9 +196,26 @@ public class Video {
     }
     
     // THIIISI
-    public String getStreamB(){
-        if (this.STREAM == 1){return "Unstream";}else{return "Stream";}
+    public String getStreamB(int id){
+        try {
+            Connection conn = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
+            Statement stmt = conn.createStatement();
+            String sql = "SELECT * FROM VIDEOS WHERE ID=" + id ;
+            ResultSet rs = stmt.executeQuery(sql);
+            if(rs.next()){
+                int a = rs.getInt("STREAM");
+                            System.out.println("INTEFE:" +a);
+                if (a == 1){return "Unstream";}else{return "Stream";}
+            }
+            else{return "Unavaliable"}
+            } catch (SQLException err) {
+            System.out.println(err.getMessage());
+            return "Unavaliable";
+        }
+
     }
+
+    
     public String getDescripcion(){
         return this.descripcion;
     }
