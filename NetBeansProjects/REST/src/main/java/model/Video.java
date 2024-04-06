@@ -44,10 +44,7 @@ public class Video {
     
     private String URL;
     private String URLINFO;
-    
     private int STREAM;
-    private int VIEWCOUNT;
-    
     
     public Video(){
         this.id = -1;
@@ -64,7 +61,7 @@ public class Video {
         this.STREAM = 0;
     }  
     
-    public Video(int autorId, String titulo, String autor, Date fecha, Time duracion, String descripcion, String formato, String url, int isstreamable){
+    public Video(int autorId, String titulo, String autor, Date fecha, Time duracion, String descripcion, String formato, String url){
         this.autorID = autorId;
         this.titulo = titulo;
         this.autor = autor;
@@ -75,7 +72,22 @@ public class Video {
         this.reproducciones = 0;
         this.URL = url;
         this.URLINFO="Video local";
-        this.STREAM = isstreamable;
+        this.STREAM=0;
+            
+    }
+    
+    public Video(int autorId, String titulo, String autor, Date fecha, Time duracion, String descripcion, String formato){
+        this.autorID = autorId;
+        this.titulo = titulo;
+        this.autor = autor;
+        this.fecha = fecha;
+        this.duracion = duracion;
+        this.descripcion = descripcion;
+        this.formato = formato;
+        this.reproducciones = 0;
+        this.URL = "aux";
+        this.URLINFO="Video local";
+        this.STREAM=0;
             
     }
     
@@ -87,12 +99,12 @@ public class Video {
             
             
             String sql = "INSERT INTO " + TABLE 
-                    + "(autorid, titulo, AUTOR, fecha_creacion, duracion, reproducciones, descripcion, formato, URL, URL_INFO)"
+                    + "(autorid, titulo, AUTOR, fecha_creacion, duracion, reproducciones, descripcion, formato, URL, URL_INFO, STREAM)"
                     + " VALUES (" + 
                     this.autorID + ", '" + this.titulo + "', '" + this.autor + 
                     "', '" + this.fecha + "', '" + this.duracion + "', " + this.reproducciones + 
                     ", '" + this.descripcion + "', '" + this.formato + "', '" + this.URL + 
-                    "', '" + this.URLINFO+ "')";
+                    "', '" + this.URLINFO+"', "+ this.STREAM + ")";
             System.out.println("Sentencia SQL: " + sql);
             stmt.executeUpdate(sql);
             
@@ -134,8 +146,7 @@ public class Video {
                 rs.getTime("DURACION"),
                 rs.getString("DESCRIPCION"),
                 rs.getString("FORMATO"),
-                rs.getString("URL"),
-                rs.getInt("STREAM"));
+                rs.getString("URL"));
     }
      
      
@@ -184,6 +195,26 @@ public class Video {
         return this.reproducciones;
     }
     
+    // THIIISI
+    public String getStreamB(int id){
+        try {
+            Connection conn = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
+            Statement stmt = conn.createStatement();
+            String sql = "SELECT * FROM VIDEOS WHERE ID=" + id ;
+            ResultSet rs = stmt.executeQuery(sql);
+            if(rs.next()){
+                int a = rs.getInt("STREAM");
+                            System.out.println("INTEFE:" +a);
+                if (a == 1){return "Unstream";}else{return "Stream";}
+            }
+            else{return "Unavaliable";}
+            } catch (SQLException err) {
+            System.out.println(err.getMessage());
+            return "Unavaliable";
+        }
+    }
+
+    
     public String getDescripcion(){
         return this.descripcion;
     }
@@ -207,20 +238,32 @@ public class Video {
         }
         return aux;
     }
-    
-    public boolean delete(int videoId){
-        boolean result = false;
-        try {
+    public String searchDB(String searchval){
+        try{
             Connection conn = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
             Statement stmt = conn.createStatement();
             
-            String sql = "DELETE FROM " + TABLE + " WHERE ID=" + videoId;
-            System.out.println("Sentencia SQL: " + sql);
-            int filasAfectadas = stmt.executeUpdate(sql);
-            if(filasAfectadas > 0)result = true;
-        } catch (SQLException err) {
+            String sql = "SELECT * FROM VIDEOS WHERE (FECHA_CREACION LIKE "+ searchval+ " OR AUTOR LIKE "+ searchval+ " OR TITULO LIKE "+ searchval+ ") AND STREAM = 1";
+            ResultSet rs = stmt.executeQuery(sql);
+            
+            StringBuilder result = new StringBuilder();
+            
+            while (rs.next()) {
+                result.append("ID: ").append(rs.getInt("ID")).append(", ");
+                result.append("FECHA_CREACION: ").append(rs.getString("FECHA_CREACION")).append(", ");
+                result.append("AUTOR: ").append(rs.getString("AUTOR")).append(", ");
+                result.append("REPRODUCCIONES: ").append(rs.getString("REPRODUCCIONES")).append(", ");
+                result.append("DESCRIPCION: ").append(rs.getString("DESCRIPCION")).append(", ");
+                result.append("TITULO: ").append(rs.getString("TITULO")).append("\n");
+            }
+            rs.close();
+            stmt.close();
+            conn.close();
+
+            return result.toString();
+        }catch (SQLException err){
             System.out.println(err.getMessage());
+            return "NO";
         }
-        return result;
     }
-}
+}   
