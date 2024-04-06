@@ -219,24 +219,45 @@ public class Video {
         return this.descripcion;
     }
     
-    public int getId(){
-        int aux = 0;
+    public String returnVideoId(String author, String title){
+        String aux = "0";
         try {
             Connection conn = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
             Statement stmt = conn.createStatement();
             
-            String sql = "SELECT * FROM " + TABLE + " WHERE autorid=" + this.autorID + " AND titulo='" + this.titulo+"'";
+            String sql = "SELECT * FROM " + TABLE + " WHERE autorid=" + author + " AND titulo='" + title +"'";
             ResultSet rs = stmt.executeQuery(sql);
+            StringBuilder result = new StringBuilder();
             if (rs.next()) {
-                aux = rs.getInt("ID");
-                System.out.println(aux);
-                                 
+                aux = Integer.toString(rs.getInt("ID"));
+                result.append("ID : ").append(aux); 
             }
             
         } catch (SQLException err) {
             System.out.println(err.getMessage());
         }
         return aux;
+    }
+    public String upOneRepro(String videoid){
+        try{
+            Connection conn = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
+            Statement stmt = conn.createStatement();
+            
+            String sql = "UPDATE VIDEOS REPRODUCCIONES = REPRODUCCIONES +1 WHERE ID=" + videoid;
+            stmt.executeUpdate(sql);
+            
+            StringBuilder result = new StringBuilder();
+            
+            result.append("ID : ").append(videoid);
+                
+            stmt.close();
+            conn.close();
+
+            return result.toString();
+        }catch (SQLException err){
+            System.out.println(err.getMessage());
+            return "ID : NONE";
+        }
     }
     public String searchDB(String searchval){
         try{
