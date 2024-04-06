@@ -207,7 +207,7 @@ public class Video {
                             System.out.println("INTEFE:" +a);
                 if (a == 1){return "Unstream";}else{return "Stream";}
             }
-            else{return "Unavaliable"}
+            else{return "Unavaliable";}
             } catch (SQLException err) {
             System.out.println(err.getMessage());
             return "Unavaliable";
