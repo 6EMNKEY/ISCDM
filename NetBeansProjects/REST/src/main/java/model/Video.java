@@ -6,6 +6,7 @@ package model;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -264,7 +265,8 @@ public class Video {
             Connection conn = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
             Statement stmt = conn.createStatement();
             
-            String sql = "SELECT * FROM VIDEOS WHERE (FECHA_CREACION LIKE "+ searchval+ " OR AUTOR LIKE "+ searchval+ " OR TITULO LIKE "+ searchval+ ") AND STREAM = 1";
+            String sql = "SELECT * FROM VIDEOS WHERE TITULO=A ";//WHERE (LOCATE("+ searchval+ ", TITULO) > 0 OR LOCATE("+ searchval+ ", FECHA_CREACION) > 0 OR LOCATE("+ searchval+ ", AUTOR) > 0) AND STREAM = 1";
+
             ResultSet rs = stmt.executeQuery(sql);
             
             StringBuilder result = new StringBuilder();

@@ -20,23 +20,24 @@ import model.Video;
  * @author alumne
  */
 
-// RESTful/RESTful/...
-@Path("RESTful")
+
+@Path("/RESTful")
 public class RESTful {
     
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String getVideos(@QueryParam("searchval") String searchVal){
+        System.out.println("GETTING: "+  searchVal);
         Video video = new Video();
         String message = video.searchDB(searchVal);
+        System.out.println("RES: " + message);
         return message;
     }
     @PUT
     @Produces(MediaType.TEXT_PLAIN)
-    public String putVideos(@QueryParam("videoid") String videoid){
+    public void putVideos(@QueryParam("videoid") String videoid){
         Video video = new Video();
         String message = video.upOneRepro(videoid);
-        return message;
     }
     
     @POST

@@ -74,10 +74,14 @@
 <script> 
     document.getElementById("search-form").addEventListener("submit", function(event) {
         event.preventDefault();
-        var searchInput = document.getElementById("Search").value;
+        var xhr = new XMLHttpRequest();
+        var searchInput = document.getElementById("search-input").value;
         var query = encodeURIComponent(searchInput);
-        var url = "http://your-server-url:port/your-servlet-path?query=" + query;
-        fetch(url)
+        var url = "RESTservlet?searchval=" + query;
+        console.log(url);
+        xhr.open("GET",url, true);
+        xhr.send();
+        /*fetch(url)
             .then(response => response.json())
             .then(data => {
                 if(data.length > 0) {
@@ -91,7 +95,7 @@
                         out.println("<td>" + video.getReproducciones()+ "</td>"); 
                         out.println("<td>" + video.getDescripcion()+ "</td>"); 
                         out.println("</tr>");}
-                }});
+                }});*/
         });
         
 </script>
