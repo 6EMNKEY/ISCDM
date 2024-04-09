@@ -117,44 +117,28 @@
                   document.querySelector("#SearchTable tbody").appendChild(row);
                 });
                     console.log(this.responseText);
-    }
+    } else {console.log(this.status)}
+    xhr.close();
 };
-
-
         
         var url = 'http://localhost:8080/ISDCM/RESTservlet';
-        
-        // Parameter value
-        var param1Value = '3';
-        
-        // Data to send in the request body
-        var data = {
-            param1: param1Value
-        };
-        
-        // Configuration for the fetch request
-        var fetchOptions = {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        };
-        
-        // Make the PUT request using fetch API
-        fetch(url, fetchOptions)
-            .then(function(response) {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
+        var xhr = new XMLHttpRequest(); // Replace with your servlet URL
+        var paramValue = '3'; // Replace with your parameter value
+
+        xhr.open('PUT', url, true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    console.log('PUT request successful');
+                    // Handle successful response if needed
+                } else {
+                    console.error('PUT request failed with status:', xhr.status);
+                    // Handle failed response if needed
                 }
-            })
-            .then(function(data) {
-                console.log('PUT request successful', data);
-                // Handle response data as needed
-            })
-            .catch(function(error) {
-                console.error('There was a problem with the PUT request:', error);
-            });
+            }
+        };
+        xhr.send('param1=' + encodeURIComponent(paramValue));
         });
         
 </script>

@@ -83,6 +83,7 @@ public class RESTservlet extends HttpServlet {
             connection.setDoOutput(true);
 
             String requestBody = "videoid=" + videoId;
+            System.out.println(requestBody);
             OutputStream outputStream = connection.getOutputStream();
             outputStream.write(requestBody.getBytes());
             outputStream.flush();
@@ -108,7 +109,6 @@ public class RESTservlet extends HttpServlet {
             connection.setDoOutput(true);
 
             String requestBody = "author=" + author + "&title=" + title;
-            System.out.println("LOCURAA");
             OutputStream outputStream = connection.getOutputStream();
             outputStream.write(requestBody.getBytes());
             outputStream.flush();
