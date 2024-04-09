@@ -47,17 +47,25 @@ public class RESTservlet extends HttpServlet {
             connection.setRequestMethod("GET");
             //connection.setRequestProperty("Accept", "application/json");
             
+
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String line;
             StringBuilder message = new StringBuilder();
-
+            
             while ((line = reader.readLine()) != null) {
                 message.append(line);
             }
             reader.close();
+            
+            PrintWriter out = response.getWriter();
+            out.println(message);
+            out.close();
+            
 
-            System.out.println(response.toString());
+            System.out.println(message);
+            
         } catch (Exception e) {
+            System.out.println("Error while getting values from REST (RESTServlet)");
             e.printStackTrace();
         }
         System.out.println("dsods");
@@ -67,8 +75,9 @@ public class RESTservlet extends HttpServlet {
     protected void doPut(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            String videoId = "123"; // Value for videoid parameter
-            URL url = new URL("http://localhost:8080/REST/");
+            String videoId = request.getParameter("param1");
+             // Value for videoid parameter
+            URL url = new URL("http://localhost:8080/REST/resources/RESTful");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("PUT");
             connection.setDoOutput(true);

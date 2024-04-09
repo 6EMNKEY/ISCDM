@@ -45,7 +45,7 @@
                         Video video = (Video) videosArray.get(i);
                 %>
                         <tr>
-                            <td><%= video.getTitulo() %></td>
+                            <td><a href="reproduccion.jsp?videoId=<%= video.getId() %>"><%= video.getTitulo() %></a></td>
                             <td><%= video.getAutor() %></td>
                             <td><%= video.getFecha() %></td>
                             <td><%= video.getDuracion() %></td>

@@ -10,6 +10,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="listadoVideos.css">
     <title>Busqueda de videos</title>
     <style>
         body {
@@ -67,10 +68,22 @@
     </form>
 </div>
 
-<div id="result-container">
-    <iframe id="video-frame" src="" frameborder="0" allowfullscreen></iframe>
-</div>
+<table id="SearchTable"" >
+  <thead>
+    <tr>
+      <th>TITULO</th>
+      <th>AUTOR</th>
+      <th>FECHA_CREACION</th>
+      <th>DESCRIPCION</th>
+      <th>REPRODUCCIONES</th>
+    </tr>
+  </thead>
+  <tbody> </tbody>
+</table>
+  
+
 </body>
+
 <script> 
     document.getElementById("search-form").addEventListener("submit", function(event) {
         event.preventDefault();
@@ -81,22 +94,69 @@
         console.log(url);
         xhr.open("GET",url, true);
         xhr.send();
-        /*fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                if(data.length > 0) {
-                        videosArray = data;
-                        for (int i = 0; i < videosArray.size(); ++i){
-                        out.println("<tr>");
-                        out.println("<td>" + video.getTitulo() + "</td>"); 
-                        out.println("<td>" + video.getAutor()+ "</td>"); 
-                        out.println("<td>" + video.getFecha()+ "</td>"); 
-                        out.println("<td>" + video.getDuracion()+ "</td>"); 
-                        out.println("<td>" + video.getReproducciones()+ "</td>"); 
-                        out.println("<td>" + video.getDescripcion()+ "</td>"); 
-                        out.println("</tr>");}
-                }});*/
+        xhr.onload = function() {
+                var tbody = document.querySelector("#SearchTable tbody" );
+                // Remove all child elements (rows) from tbody
+                while (tbody.firstChild) {
+                  tbody.removeChild(tbody.firstChild);
+                }
+                if (this.status === 200) {
+
+                var lines = this.responseText.split(",UWU,");
+
+                // Iterate over lines to create table rows
+                lines.forEach(function(line) {
+                  var rowData = line.split(", ");
+                  var row = document.createElement("tr");
+                  rowData.forEach(function(cellData) {
+                    var cellParts = cellData.split(": ");
+                    var cell = document.createElement("td");
+                    cell.textContent = cellParts[1];
+                    row.appendChild(cell);
+                  });
+                  document.querySelector("#SearchTable tbody").appendChild(row);
+                });
+                    console.log(this.responseText);
+    }
+};
+
+
+        
+        var url = 'http://localhost:8080/ISDCM/RESTservlet';
+        
+        // Parameter value
+        var param1Value = '3';
+        
+        // Data to send in the request body
+        var data = {
+            param1: param1Value
+        };
+        
+        // Configuration for the fetch request
+        var fetchOptions = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        };
+        
+        // Make the PUT request using fetch API
+        fetch(url, fetchOptions)
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+            })
+            .then(function(data) {
+                console.log('PUT request successful', data);
+                // Handle response data as needed
+            })
+            .catch(function(error) {
+                console.error('There was a problem with the PUT request:', error);
+            });
         });
         
 </script>
+
 </html>

@@ -37,7 +37,7 @@ public class RESTful {
     @Produces(MediaType.TEXT_PLAIN)
     public void putVideos(@QueryParam("videoid") String videoid){
         Video video = new Video();
-        String message = video.upOneRepro(videoid);
+        video.upOneRepro(videoid);
     }
     
     @POST

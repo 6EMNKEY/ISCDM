@@ -61,6 +61,33 @@ public class Video {
         this.STREAM = 0;
     }  
     
+    public Video(int id){
+        try {
+            Connection conn = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
+            Statement stmt = conn.createStatement();
+
+            String sql = "SELECT * FROM " + TABLE + " WHERE ID=" + id;
+            System.out.println("Sentencia SQL: " + sql);
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                // Si se encontró un video con el ID dado, crear un objeto Video con los datos correspondientes
+                this.id = rs.getInt("ID");
+                this.titulo = rs.getString("titulo");
+                this.autor = rs.getString("autor");
+                this.fecha = rs.getDate("fecha_creacion");
+                this.duracion = rs.getTime("duracion");
+                this.descripcion = rs.getString("descripcion");
+                this.formato = rs.getString("formato");
+                this.URL = rs.getString("url");
+                this.reproducciones = rs.getInt("reproducciones");
+            }            
+        } catch (SQLException err) {
+            System.out.println(err.getMessage());
+        }
+        System.out.println("URL:" + this.URL);
+    }
+
+    
     public Video(int autorId, String titulo, String autor, Date fecha, Time duracion, String descripcion, String formato, String url){
         this.autorID = autorId;
         this.titulo = titulo;
@@ -115,6 +142,10 @@ public class Video {
         return result;
     }
     
+    public String getUrl(){
+        return this.URL;
+    }
+
     public ArrayList<Video> getVideos(int userId){
        ArrayList<Video> listaVideos = new ArrayList(); 
        
