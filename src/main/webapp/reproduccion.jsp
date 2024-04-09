@@ -1,74 +1,34 @@
-<%-- 
-    Document   : reproduccion
-    Created on : 4 abr 2024, 10:55:02
-    Author     : alumne
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="model.Video"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Videos</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 10px 20px;
-            text-align: center;
-        }
-        #search-container {
-            text-align: center;
-            margin-top: 50px;
-        }
-        #search-container input[type="text"] {
-            padding: 10px;
-            width: 300px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        #search-container input[type="submit"] {
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        #result-container {
-            margin-top: 20px;
-            text-align: center;
-        }
-        #result-container iframe {
-            width: 800px;
-            height: 450px;
-        }
-    </style>
+    <title>Reproducción de Video</title>
+    <link rel="stylesheet" href="reproduccion.css">
+    <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
 </head>
 <body>
+    <div class="video-container">
+        <% 
+            String videoId = request.getParameter("videoId");
+            Video video = new Video(Integer.parseInt(videoId));
+            System.out.println("Url video: " + video.getUrl());
+        %>
+        <h1 class="video-title"><%= video.getTitulo() %></h1>
+        <p class="video-description"><%= video.getDescripcion() %></p>
+        <div class="video-info">
+            <span class="video-info-item">Fecha de Subida: <%= video.getFecha() %></span>
+            <span class="video-info-item">Reproducciones: <%= video.getReproducciones() %></span>
+        </div>
+        <video  controls preload="auto" width="640" height="360">
+            <source src="<%= video.getUrl() %>" type="video/mp4">
+            <!-- Otros formatos de video aquí -->
+        </video>
+    </div>
 
-<header>
-    <h1>Search Videos</h1>
-</header>
-
-<div id="search-container">
-    <form id="search-form">
-        <input type="text" id="search-input" placeholder="Enter video keywords...">
-        <input type="submit" value="Search">
-    </form>
-</div>
-
-<div id="result-container">
-    <iframe id="video-frame" src="" frameborder="0" allowfullscreen></iframe>
-</div>
+    <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+    
 </body>
-</
+</html>

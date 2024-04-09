@@ -45,14 +45,14 @@
                         Video video = (Video) videosArray.get(i);
                 %>
                         <tr>
-                            <td><%= video.getTitulo() %></td>
+                            <td><a href="<%= video.getId() %>"><%= video.getTitulo() %></a></td>
                             <td><%= video.getAutor() %></td>
                             <td><%= video.getFecha() %></td>
                             <td><%= video.getDuracion() %></td>
                             <td><%= video.getReproducciones() %></td>
                             <td><%= video.getDescripcion() %></td>
                             <td>
-                                <button onclick="streamVideo('<%= video.getId() %>' )"><%= video.getStreamB(video.getId())%></button>
+                                <button onclick="streamVideo('<%= video.getId() %>')"><%= video.getStreamB()%></button>
                             </td>
                         </tr>
                 <%
@@ -66,18 +66,16 @@
             var url = 'UserServlet?param1=' + encodeURIComponent("logout");
             xhr.open("GET",url, true);
             xhr.send();
-            xhr.onload =  function() {if (xhr.status === 201){
+            console.log("FUNCIONE");
+            xhr.onload =  function() {if (xhr.status === 200){
                 window.location.href = "busqueda.jsp";
         }};
         });
         
         function streamVideo(videoId) {
-            var xhr = new XMLHttpRequest();
-            var videoId2 = ""+videoId;
-            var url = 'UserServlet?param1=' + encodeURIComponent("streamch") + "&param2=" +encodeURIComponent(videoId2);
-            console.log(url);
-            xhr.open("GET",url, true);
-            xhr.send();
+        // Aquí puedes realizar acciones con el ID del video, como abrir una ventana emergente de reproducción
+        console.log("ID del video: " + videoId);
+        //window.location.href = 'ServletReproduccion?videoId=' + videoId;
         }
         
     

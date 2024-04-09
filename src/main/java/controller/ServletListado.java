@@ -63,7 +63,6 @@ public class ServletListado extends HttpServlet {
     }
     
     
-    
     private void upload(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
             String name = request.getParameter("videoName");
@@ -98,16 +97,17 @@ public class ServletListado extends HttpServlet {
             else{
                 System.out.println("Directorio ya existe");
             }
-            
-            Path filePath = path.resolve(fileName);
+            String userName = (String)request.getSession().getAttribute("username");
+            Path filePath = path.resolve(userName+'/'+name+'.'+format);
             System.out.println("filePath: " + filePath.toString());
             try (InputStream input = filePart.getInputStream()) {
                 Files.copy(input, filePath, StandardCopyOption.REPLACE_EXISTING);
             }
-            Video video = new Video(authorId, name, author, fechaSQL, sqlTime, description, format, urlinfo);
+            Video video = new Video(authorId, name, author, fechaSQL, sqlTime, description, format, filePath.toString(),true);
             if(video.existsVideo()){
                 System.out.println("Video ya existe");
-                request.setAttribute("error","Video repetido");
+                HttpSession session = request.getSession();
+                session.setAttribute("error","Video repetido");
                 RequestDispatcher dispatcher = request.getRequestDispatcher("subirVideo.jsp");
                 dispatcher.forward(request, response);
             }
@@ -123,7 +123,7 @@ public class ServletListado extends HttpServlet {
                 dispatcher.forward(request, response);
             }
     }
-
+    
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -137,7 +137,6 @@ public class ServletListado extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
-  
     }
 
     /**
