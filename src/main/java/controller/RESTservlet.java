@@ -4,6 +4,9 @@
  */
 package controller;
 
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonReader;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -27,6 +30,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -75,14 +79,30 @@ public class RESTservlet extends HttpServlet {
     protected void doPut(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            String videoId = request.getParameter("param1");
+            String videoId = null;
+
+            // Read the request input stream
+            BufferedReader reader = request.getReader();
+            StringBuilder jsonPayload = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                jsonPayload.append(line);
+            }
+
+            // Parse the JSON data
+            JsonReader jsonReader = Json.createReader(new StringReader(jsonPayload.toString()));
+            JsonObject jsonObject = jsonReader.readObject();
+
+            // Get the value of param1
+            videoId = jsonObject.getString("param1");
+           
              // Value for videoid parameter
             URL url = new URL("http://localhost:8080/REST/resources/RESTful");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("PUT");
             connection.setDoOutput(true);
 
-            String requestBody = "videoid=" + videoId;
+            String requestBody = videoId;
             System.out.println(requestBody);
             OutputStream outputStream = connection.getOutputStream();
             outputStream.write(requestBody.getBytes());
@@ -100,19 +120,49 @@ public class RESTservlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            String author = "John Doe";
-            String title = "Example Title";
+            String authorid = null;
+            String title = null;
 
-            URL url = new URL("http://example.com/api/resource");
+            // Read the request input stream
+            BufferedReader reader = request.getReader();
+            StringBuilder jsonPayload = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                jsonPayload.append(line);
+            }
+
+            // Parse the JSON data
+            JsonReader jsonReader = Json.createReader(new StringReader(jsonPayload.toString()));
+            JsonObject jsonObject = jsonReader.readObject();
+
+            // Get the value of param1
+            authorid = jsonObject.getString("param1");
+            title = jsonObject.getString("param2");
+
+            URL url = new URL(this.RestUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setDoOutput(true);
 
-            String requestBody = "author=" + author + "&title=" + title;
+            String requestBody =  authorid + "&" + title;
             OutputStream outputStream = connection.getOutputStream();
             outputStream.write(requestBody.getBytes());
             outputStream.flush();
             outputStream.close();
+            
+            
+            BufferedReader readera = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String linea;
+            StringBuilder message = new StringBuilder();
+            
+            while ((linea = readera.readLine()) != null) {
+                message.append(linea);
+            }
+            reader.close();
+            
+            PrintWriter out = response.getWriter();
+            out.println(message);
+            out.close();
 
             int responseCode = connection.getResponseCode();
             System.out.println("Response Code: " + responseCode);

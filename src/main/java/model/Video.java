@@ -145,7 +145,9 @@ public class Video {
     public String getUrl(){
         return this.URL;
     }
-
+    public int getAutorId(){
+        return this.autorID;
+    }
     public ArrayList<Video> getVideos(int userId){
        ArrayList<Video> listaVideos = new ArrayList(); 
        

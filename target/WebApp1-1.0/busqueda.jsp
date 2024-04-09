@@ -118,12 +118,10 @@
                 });
                     console.log(this.responseText);
     } else {console.log(this.status)}
-    xhr.close();
 };
-        
         var url = 'http://localhost:8080/ISDCM/RESTservlet';
         var xhr = new XMLHttpRequest(); // Replace with your servlet URL
-        var paramValue = '3'; // Replace with your parameter value
+        var paramValue = '2'; // Replace with your parameter value
 
         xhr.open('PUT', url, true);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -138,7 +136,31 @@
                 }
             }
         };
-        xhr.send('param1=' + encodeURIComponent(paramValue));
+        xhr.send(JSON.stringify({param1 : paramValue}));
+        
+        
+        var url = 'http://localhost:8080/ISDCM/RESTservlet';
+        var xhr = new XMLHttpRequest(); // Replace with your servlet URL
+        var paramValue = '4'; // Replace with your parameter value
+
+        xhr.open('POST', url, true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    console.log('POST request successful');
+                    // Handle successful response if needed
+                } else {
+                    console.error('POST request failed with status:', xhr.status);
+                    // Handle failed response if needed
+                }
+            }
+        };
+        xhr.send(JSON.stringify({param1 : "1", param2: "A"}));
+        xhr.onload = function() {
+            console.log("ID:" +this.responseText);
+        };
+        
         });
         
 </script>

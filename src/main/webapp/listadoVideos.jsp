@@ -45,7 +45,7 @@
                         Video video = (Video) videosArray.get(i);
                 %>
                         <tr>
-                            <td><a href="reproduccion.jsp?videoId=<%= video.getId() %>"><%= video.getTitulo() %></a></td>
+                            <td><a id="viewlink" href="reproduccion.jsp?videoId=<%= video.getId() %>&p2=<%= video.getAutorId() %>"><%= video.getTitulo() %></a></td>
                             <td><%= video.getAutor() %></td>
                             <td><%= video.getFecha() %></td>
                             <td><%= video.getDuracion() %></td>
@@ -79,6 +79,59 @@
             xhr.open("GET",url, true);
             xhr.send();
         }
+        
+        var link = document.getElementById('viewlink');
+            
+            // Attach a click event listener to the link
+            link.addEventListener('click', function() {
+                // Prevent the default behavior of the link (e.g., navigating to a new page)
+                var titol = link.getAttribute('data-id');
+                var authid = link.getAttribute('data-value');
+                
+                var url = 'http://localhost:8080/ISDCM/RESTservlet';
+        var xhr = new XMLHttpRequest(); // Replace with your servlet URL
+        var paramValue = '4'; // Replace with your parameter value
+
+        xhr.open('POST', url, true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    console.log('POST request successful');
+                    // Handle successful response if needed
+                } else {
+                    console.error('POST request failed with status:', xhr.status);
+                    // Handle failed response if needed
+                }
+            }
+        };
+        xhr.send(JSON.stringify({param1 : authid, param2: titol}));
+        xhr.onload = function() {
+            var videoId = this.responseText;
+        };
+        
+        var xhr = new XMLHttpRequest(); // Replace with your servlet URL
+        // // Replace with your parameter value
+
+        xhr.open('PUT', url, true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    console.log('PUT request successful');
+                    // Handle successful response if needed
+                } else {
+                    console.error('PUT request failed with status:', xhr.status);
+                    // Handle failed response if needed
+                }
+            }
+        };
+        xhr.send(JSON.stringify({param1 : videoId}));
+                
+                
+            });
+        
+        
         
     
     </script>
